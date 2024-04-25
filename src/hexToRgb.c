@@ -1,4 +1,4 @@
-// gcc hexToRgb.c
+// gcc hexToRgb.c -o hexToRgb -s -O2 -Wall -Wextra
 #include <stdio.h>
 #include <string.h>
 #include <windows.h>
@@ -7,7 +7,8 @@ int main(int argc, char *argv[])
 {
     if (argc == 1)
     {
-        printf("Convert hex string to RGB values and copies it to the clipboard.\nThe hex string should be 6 total characters long and NOT include a #.\n");
+        printf("Convert hex string to RGB values and copies it to the clipboard.\n");
+        printf("The hex string should be 6 total characters long and NOT include a #.\n");
         return 0;
     }
     if (argc > 2 || strlen(argv[1]) != 6)
@@ -75,7 +76,6 @@ int main(int argc, char *argv[])
         case 'F':
             hex_as_decimal = 15;
             break;
-        // If we reach here, character was not 0-9 or a-f or A-F
         default:
             printf("Input contained non-hex characters, exiting...\n");
             return 1;
@@ -102,15 +102,13 @@ int main(int argc, char *argv[])
         case 5:
             b += hex_as_decimal;
             break;
-        default:
-            break;
         }
     }
     char rgb[16];
-    sprintf(rgb, "%d %d %d\0", r, g, b);
+    sprintf(rgb, "%d %d %d", r, g, b);
     printf("RGB: %s", rgb);
 
-    const size_t len = strlen(rgb) + 1;
+    const unsigned len = strlen(rgb) + 1;
     HGLOBAL globalHandle = GlobalAlloc(GMEM_MOVEABLE, len);
     memcpy(GlobalLock(globalHandle), rgb, len);
 

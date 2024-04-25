@@ -1,4 +1,4 @@
-// g++ renamer.cpp -municode -o renamer -lshlwapi
+// g++ renamer.cpp -municode -o renamer -lshlwapi -s -O2 -Wall -Wextra
 
 #include <iostream>
 #include <string>

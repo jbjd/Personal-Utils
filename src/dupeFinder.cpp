@@ -1,4 +1,4 @@
-// g++ main.cpp -municode -o dupefinder -O
+// g++ dupeFinder.cpp -municode -o dupefinder -O2 -Wall -Wextra -s
 
 #include <iostream>
 #include <string.h>
@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <vector>
 
-int wmain(int argc, wchar_t **argv)
+int wmain([[maybe_unused]] int argc, [[maybe_unused]] wchar_t **argv)
 {
     using namespace std;
     namespace fs = filesystem;
@@ -47,7 +47,7 @@ int wmain(int argc, wchar_t **argv)
         }
     }
 
-    for (const auto dupe_entry : hash_to_paths)
+    for (const auto &dupe_entry : hash_to_paths)
     {
         vector<fs::path> dupe_list = dupe_entry.second;
         if (dupe_list.size() > 1)
