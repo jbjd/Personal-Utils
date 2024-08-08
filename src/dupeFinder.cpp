@@ -7,20 +7,15 @@
 #include <unordered_map>
 #include <vector>
 
-int wmain([[maybe_unused]] int argc, [[maybe_unused]] wchar_t **argv)
+void collectHashesInFolder(
+    std::filesystem::path path,
+    std::unordered_map<size_t, std::vector<std::filesystem::path>> &hash_to_paths,
+    unsigned &count)
 {
     using namespace std;
     namespace fs = filesystem;
 
-    ios_base::sync_with_stdio(false);
-
-    fs::path dir = fs::current_path();
-    cout << "Finding duplicates in " << dir << endl;
-
-    unordered_map<size_t, vector<fs::path>> hash_to_paths;
-
-    unsigned count = 0;
-    for (const fs::directory_entry &entry : fs::directory_iterator(dir))
+    for (const fs::directory_entry &entry : fs::directory_iterator(path))
     {
         if (entry.is_directory())
         {
@@ -45,6 +40,33 @@ int wmain([[maybe_unused]] int argc, [[maybe_unused]] wchar_t **argv)
         {
             wcout << "Loaded " << count << " files" << endl;
         }
+    }
+}
+
+int wmain(int argc, wchar_t **argv)
+{
+    using namespace std;
+    namespace fs = filesystem;
+
+    ios_base::sync_with_stdio(false);
+
+    fs::path dir = fs::current_path();
+    wcout << "Finding duplicates in " << dir;
+    for (int i = 1; i < argc; ++i)
+    {
+        wcout << " and \"" << argv[i] << "\"";
+    }
+    wcout << '\n'
+          << endl;
+
+    unordered_map<size_t, vector<fs::path>> hash_to_paths;
+
+    unsigned count = 0;
+    collectHashesInFolder(dir, hash_to_paths, count);
+    for (int i = 1; i < argc; ++i)
+    {
+        fs::path pathToAdd = argv[i];
+        collectHashesInFolder(pathToAdd, hash_to_paths, count);
     }
 
     for (const auto &dupe_entry : hash_to_paths)
