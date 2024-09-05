@@ -1,4 +1,3 @@
-.vscode
-
-exe/
-*.exe
+.exe/
+.vscode/
+target/
