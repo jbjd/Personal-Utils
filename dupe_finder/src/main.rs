@@ -39,20 +39,20 @@ fn create_hash_to_file_map(
 
     let mut count: u32 = 0;
     for entry in fs::read_dir(dir)? {
-        let entry: DirEntry = entry?;
-        let path = entry.path();
+        let dir_entry: DirEntry = entry?;
+        let path = dir_entry.path();
         if path.is_dir() {
             // visit_dirs(&path, cb)?;
         } else {
-            let file_hash: u64 = cb(&entry);
+            let file_hash: u64 = cb(&dir_entry);
             if file_hash == 0 {
                 continue;
             }
-            let file_key: String = path.to_str().expect("Failed to get file name").to_owned();
+            let file_path: String = path.to_str().expect("Failed to get file name").to_owned();
             file_hashes
                 .entry(file_hash)
                 .or_insert_with(|| vec![])
-                .push(file_key);
+                .push(file_path);
 
             count += 1;
             if count % 100 == 0 {
