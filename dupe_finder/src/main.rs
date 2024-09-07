@@ -1,9 +1,9 @@
 use std::collections::HashMap;
-use std::env;
 use std::ffi::OsStr;
 use std::fs::{self, DirEntry};
 use std::hash::{DefaultHasher, Hash, Hasher};
 use std::path::Path;
+use std::{env, io};
 
 use config::{Config, Flags};
 
@@ -37,9 +37,12 @@ fn populate_hashes_to_files(
     config: &Config,
     file_hashes: &mut HashMap<u64, Vec<String>>,
     count: &mut u32,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), io::Error> {
     if !dir.is_dir() {
-        return Err(Box::from(format!("{:?} is not a directory", dir)));
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!("{:?} is not a directory", dir),
+        ));
     }
 
     for entry in fs::read_dir(dir)? {
@@ -74,7 +77,7 @@ fn get_hashes_to_files(
     dir: &Path,
     cb: &dyn Fn(&DirEntry) -> u64,
     config: Config,
-) -> Result<HashMap<u64, Vec<String>>, Box<dyn std::error::Error>> {
+) -> Result<HashMap<u64, Vec<String>>, io::Error> {
     let mut file_hashes: HashMap<u64, Vec<String>> = HashMap::new();
     let mut count: u32 = 0;
 
