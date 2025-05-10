@@ -13,7 +13,7 @@ fn generate_file_hash(dir_entry: &DirEntry) -> u64 {
     let path = dir_entry.path();
     let file_name = path.file_name().unwrap_or(OsStr::new(""));
 
-    let file_contents = match fs::read(dir_entry.path()) {
+    let file_contents: Vec<u8> = match fs::read(dir_entry.path()) {
         Ok(res) => res,
         Err(e) => {
             eprintln!("Error creating file hash for file {:?}: {:?}", file_name, e);
