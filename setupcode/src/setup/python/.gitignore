@@ -1,0 +1,9 @@
+# Common Python Ignores
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.vscode/
+build/
+*.egg-info/
+
+.coverage
