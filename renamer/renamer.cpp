@@ -1,4 +1,4 @@
-// g++ renamer.cpp -municode -o renamer -lshlwapi -s -O2 -Wall -Wextra
+// g++ renamer.cpp -municode -o renamer -lshlwapi -s -O3 -Wall -Wextra
 
 #include <iostream>
 #include <string>
@@ -22,7 +22,7 @@ int wmain(int argc, wchar_t **argv)
         exit(0);
     }
     int startCount = 1, i;
-    wstring fuzzySearch;
+    wstring fuzzySearch = argc > 3 ? argv[3] : L"*.*"; // *.* finds all files
     if (argc > 2)
     {
         for (i = 0; argv[2][i] != 0; ++i)
@@ -35,7 +35,6 @@ int wmain(int argc, wchar_t **argv)
         }
         wchar_t *end;
         startCount = wcstol(argv[2], &end, 10);
-        fuzzySearch = argc > 3 ? argv[3] : L"*.*"; // *.* finds all files
     }
 
     wstring dirPath(fs::current_path().wstring());
@@ -56,14 +55,15 @@ int wmain(int argc, wchar_t **argv)
     HANDLE fileHandle = FindFirstFileW(dirPath.c_str(), &dirData);
     if (fileHandle == INVALID_HANDLE_VALUE)
     {
-        wcout << L"No such path " << argv[1] << endl;
+        DWORD lastError = GetLastError();
+        wcout << L"No such path " << dirPath << "\nLast error code: " << lastError << endl;
         exit(1);
     }
 
     do
     {
         // add all non-directories to our list
-        if (dirData.dwFileAttributes == FILE_ATTRIBUTE_NORMAL || dirData.dwFileAttributes == FILE_ATTRIBUTE_ARCHIVE)
+        if ((dirData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)
         {
             toRename.push_back(wstring(dirData.cFileName));
         }
