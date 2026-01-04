@@ -21,11 +21,11 @@ int wmain(int argc, wchar_t **argv)
               << endl;
         exit(0);
     }
-    int startCount = 1, i;
+    int startCount = 1;
     wstring fuzzySearch = argc > 3 ? argv[3] : L"*.*"; // *.* finds all files
     if (argc > 2)
     {
-        for (i = 0; argv[2][i] != 0; ++i)
+        for (int i = 0; argv[2][i] != 0; ++i)
         {
             if (!iswdigit(argv[2][i]))
             {
